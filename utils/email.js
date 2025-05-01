@@ -4,8 +4,8 @@ const sendEmail = async (options) => {
   // 1) Create a transporter :
   var transport = nodemailer.createTransport({
     service: "gmail",
-    // host: process.env.EmailMailer,
-    // port: process.env.PORTMAILER,
+    host: "smtp.gmail.com",
+    port: process.env.PORTMAILER,
     auth: {
       user: process.env.USERMAILER,
       pass: process.env.PASSWORDMAILER,
@@ -13,7 +13,7 @@ const sendEmail = async (options) => {
   });
   // 2) Define the email options :
   const mailOptions = {
-    from: "Nidhal Boumaiza <Nidhalbmz123@gmail.com>",
+    from: "Medical App",
     to: options.email,
     subject: options.subject,
     text: options.message,

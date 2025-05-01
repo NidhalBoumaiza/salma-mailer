@@ -16,10 +16,32 @@ exports.sendMailService = catchAsync(async (req, res, next) => {
       )
     );
   }
+  if (req.body.subject != "Compte Activer" && !req.body.code) {
+    return next(new AppError("Veuillez saisir un code", 400));
+  }
+  subject = req.body.subject;
+  let message = "";
+  let code = req.body.code;
+  if (subject === "Compte Activer") {
+    message = `Bonjour,\n
+      Merci de créer un compte a notre platform.\n
+      Vore Compte est maintenant activer !`;
+  } else if (subject === "Activation de compte") {
+    message = `Bonjour,\n
+      Merci de créer un compte a notre platform.\n
+      Voici le code d'activation de votre compte : ${code.toString}.\n
+      Veuillez le saisir pour activer votre compte.`;
+  } else if (subject === "Mot de passe oublié") {
+    message = `Bonjour,\n
+      Merci de créer un compte a notre platform.\n
+      Voici le code de réinitialisation de votre mot de passe : ${code.toString}.\n
+      Veuillez le saisir pour réinitialiser votre mot de passe.`;
+  } else if (subject === "Changer mot de passe") {
+    message = `Bonjour,\n
+      Voici le code de réinitialisation de votre mot de passe : ${code.toString}.\n
+      Veuillez le saisir pour réinitialiser votre mot de passe.`;
+  }
 
-  const message = `Bonjour,\n
-  Merci de créer un compte a notre platform.\n
-  Vore Compte est maintenant activer !`;
   try {
     await sendEmail({
       email: req.body.email,
@@ -28,13 +50,10 @@ exports.sendMailService = catchAsync(async (req, res, next) => {
     });
     res.status(201).json({
       status: "success",
-      message: "Votre e-mail d'activation a été envoyé avec succès ",
+      message: `Un e-mail a été envoyé à ${req.body.email} avec succès`,
     });
   } catch (err) {
     console.log(err);
-    // newAccount.activeAccountToken = undefined;
-    // newAccount.activeAccountTokenExpires = undefined;
-    // newAccount.save({ validateBeforeSave: false });
     return next(
       new AppError(
         "Une erreur s'est produite lors de l'envoi de l'e-mail ! Merci d'essayer plus tard .",
