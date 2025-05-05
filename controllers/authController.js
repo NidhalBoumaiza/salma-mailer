@@ -29,7 +29,7 @@ exports.sendMailService = catchAsync(async (req, res, next) => {
   } else if (subject === "Activation de compte") {
     message = `Bonjour,\n
       Merci de créer un compte a notre platform.\n
-      Voici le code d'activation de votre compte : ${code.toString}.\n
+      Voici le code d'activation de votre compte : ${code}.\n
       Veuillez le saisir pour activer votre compte.`;
   } else if (subject === "Mot de passe oublié") {
     message = `Bonjour,\n
